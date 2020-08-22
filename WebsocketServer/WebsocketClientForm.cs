@@ -8,13 +8,18 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace WebsocketServer
+namespace IToolWebsocket
 {
     public partial class WebsocketClientForm : Form
     {
         public WebsocketClientForm()
         {
             InitializeComponent();
+        }
+
+        private void WebsocketClientForm_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WebsocketServer.Properties {
+namespace IToolWebsocket.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

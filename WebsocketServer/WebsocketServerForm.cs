@@ -4,7 +4,7 @@ using System.Windows.Forms;
 using SuperSocket.SocketBase;
 using SuperSocket.WebSocket;
 
-namespace WebsocketServer
+namespace IToolWebsocket
 {
     public partial class WebsocketServerForm : Form
     {

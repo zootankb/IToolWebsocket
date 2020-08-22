@@ -1,4 +1,4 @@
-﻿namespace WebsocketServer
+﻿namespace IToolWebsocket
 {
     partial class WebsocketServerForm
     {
@@ -178,7 +178,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "WebsocketServerForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "WebsocketServer_服务端";
+            this.Text = "Websocket_服务端";
             this.Load += new System.EventHandler(this.WebsocketServerForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
