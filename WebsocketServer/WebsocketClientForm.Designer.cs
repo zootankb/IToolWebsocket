@@ -36,8 +36,9 @@
             this.btnSend = new System.Windows.Forms.Button();
             this.btnClose = new System.Windows.Forms.Button();
             this.btnStart = new System.Windows.Forms.Button();
-            this.tbAddress = new System.Windows.Forms.TextBox();
+            this.tbPort = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.tbIP = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // label3
@@ -82,11 +83,11 @@
             // 
             // tbSend
             // 
-            this.tbSend.Location = new System.Drawing.Point(14, 67);
+            this.tbSend.Location = new System.Drawing.Point(14, 115);
             this.tbSend.Multiline = true;
             this.tbSend.Name = "tbSend";
             this.tbSend.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.tbSend.Size = new System.Drawing.Size(240, 444);
+            this.tbSend.Size = new System.Drawing.Size(240, 396);
             this.tbSend.TabIndex = 4;
             // 
             // btnSend
@@ -97,32 +98,35 @@
             this.btnSend.TabIndex = 5;
             this.btnSend.Text = "发送消息";
             this.btnSend.UseVisualStyleBackColor = true;
+            this.btnSend.Click += new System.EventHandler(this.btnSend_Click);
             // 
             // btnClose
             // 
-            this.btnClose.Location = new System.Drawing.Point(179, 38);
+            this.btnClose.Location = new System.Drawing.Point(179, 71);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(75, 23);
             this.btnClose.TabIndex = 3;
             this.btnClose.Text = "关闭链接";
             this.btnClose.UseVisualStyleBackColor = true;
+            this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
             // btnStart
             // 
-            this.btnStart.Location = new System.Drawing.Point(95, 38);
+            this.btnStart.Location = new System.Drawing.Point(95, 71);
             this.btnStart.Name = "btnStart";
             this.btnStart.Size = new System.Drawing.Size(75, 23);
             this.btnStart.TabIndex = 2;
             this.btnStart.Text = "开始链接";
             this.btnStart.UseVisualStyleBackColor = true;
+            this.btnStart.Click += new System.EventHandler(this.btnStart_Click);
             // 
-            // tbAddress
+            // tbPort
             // 
-            this.tbAddress.Location = new System.Drawing.Point(95, 11);
-            this.tbAddress.Name = "tbAddress";
-            this.tbAddress.Size = new System.Drawing.Size(159, 21);
-            this.tbAddress.TabIndex = 1;
-            this.tbAddress.Text = "8001";
+            this.tbPort.Location = new System.Drawing.Point(95, 37);
+            this.tbPort.Name = "tbPort";
+            this.tbPort.Size = new System.Drawing.Size(159, 21);
+            this.tbPort.TabIndex = 1;
+            this.tbPort.Text = "8000";
             // 
             // label1
             // 
@@ -133,11 +137,20 @@
             this.label1.TabIndex = 12;
             this.label1.Text = "服务器地址：";
             // 
+            // tbIP
+            // 
+            this.tbIP.Location = new System.Drawing.Point(95, 10);
+            this.tbIP.Name = "tbIP";
+            this.tbIP.Size = new System.Drawing.Size(159, 21);
+            this.tbIP.TabIndex = 0;
+            this.tbIP.Text = "127.0.0.1";
+            // 
             // WebsocketClientForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(831, 551);
+            this.Controls.Add(this.tbIP);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.tbHistoryTotal);
             this.Controls.Add(this.label2);
@@ -146,7 +159,7 @@
             this.Controls.Add(this.btnSend);
             this.Controls.Add(this.btnClose);
             this.Controls.Add(this.btnStart);
-            this.Controls.Add(this.tbAddress);
+            this.Controls.Add(this.tbPort);
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "WebsocketClientForm";
@@ -168,7 +181,8 @@
         private System.Windows.Forms.Button btnSend;
         private System.Windows.Forms.Button btnClose;
         private System.Windows.Forms.Button btnStart;
-        private System.Windows.Forms.TextBox tbAddress;
+        private System.Windows.Forms.TextBox tbPort;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox tbIP;
     }
 }
