@@ -37,7 +37,7 @@ namespace IToolWebsocket
             {
                 if (server.Start())
                 {
-                    MessageBox.Show("启动成功");
+                    AddHistoryTotal(string.Format("{0} 服务器 {1}:{2} 已经启动", GetTimeTick(), server.Config.Ip, server.Config.Port));
                 }
                 else
                 {
@@ -69,7 +69,7 @@ namespace IToolWebsocket
 
         #endregion
 
-        #region Func
+        #region Call Func
         private void Server_SessionClosed(AppSession session, SuperSocket.SocketBase.CloseReason value)
         {
 
@@ -86,5 +86,27 @@ namespace IToolWebsocket
         }
 
         #endregion
+
+        #region Pri Func
+        /// <summary>
+        /// 获取时间格式化的字符串
+        /// </summary>
+        /// <returns></returns>
+        private string GetTimeTick()
+        {
+            return DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+        }
+
+        /// <summary>
+        /// 添加总的消息记录
+        /// </summary>
+        /// <param name="history"></param>
+        private void AddHistoryTotal(string history)
+        {
+            tbHistory.AppendText(history + "\r\n\r\n");
+        }
+
+        #endregion
+
     }
 }
