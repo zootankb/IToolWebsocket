@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
 using SuperSocket.SocketBase;
+using SuperSocket.SocketBase.Config;
 using SuperSocket.WebSocket;
 
 namespace IToolWebsocket
@@ -54,7 +55,12 @@ namespace IToolWebsocket
                 server.NewRequestReceived += Server_NewRequestReceived;
                 server.NewSessionConnected += Server_NewSessionConnected;
                 server.SessionClosed += Server_SessionClosed;
-                if (server.Setup(int.Parse(portStr)))
+                ServerConfig sc = new ServerConfig()
+                {
+                    Port = int.Parse(portStr),//set the listening port
+                    MaxConnectionNumber = 10000
+                };
+                if (server.Setup(sc))
                 {
                     if (server.Start())
                     {
@@ -134,8 +140,18 @@ namespace IToolWebsocket
 
         private void Server_NewSessionConnected(AppSession session)
         {
-            AddClient(session);
-            AddHistoryTotal("客户端 " + session.RemoteEndPoint.ToString() + " 连接");
+            Console.WriteLine(session.Connected);
+            if (this.InvokeRequired)
+            {
+                Action<AppSession> cb = new Action<AppSession>(Server_NewSessionConnected);
+                this.Invoke(cb, new object[] { session });
+            }
+            else
+            {
+                AddClient(session);
+                AddHistoryTotal("客户端 " + session.RemoteEndPoint.ToString() + " 连接");
+            }
+            
         }
 
         private void Server_NewRequestReceived(AppSession session, SuperSocket.SocketBase.Protocol.StringRequestInfo requestInfo)

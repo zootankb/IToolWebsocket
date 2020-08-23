@@ -48,7 +48,7 @@ namespace IToolWebsocket
                 client.Opened += Client_Opened;
                 client.Error += Client_Error;
                 client.DataReceived += Client_DataReceived;
-                client.ReceiveBufferSize = 2048;
+                client.ReceiveBufferSize = 4096;
                 client.Open();
                 AddHistory(string.Format("正在连接 ws://{0}:{1}...", ipStr, portStr));
             }
@@ -74,7 +74,6 @@ namespace IToolWebsocket
 
         private void Client_Opened(object sender, EventArgs e)
         {
-            client.Send("客户端准备发送数据");
             AddHistory(string.Format("连接成功,准备发送数据！"));
             TransformConnect(false);
         }
