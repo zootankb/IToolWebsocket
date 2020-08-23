@@ -102,7 +102,7 @@ namespace IToolWebsocket
         /// <param name="e"></param>
         private void btnCloseOne_Click(object sender, EventArgs e)
         {
-            if (lbClients.SelectedIndex > 0)
+            if (lbClients.SelectedIndex >= 0)
             {
                 // TODO
             }
@@ -115,7 +115,7 @@ namespace IToolWebsocket
         /// <param name="e"></param>
         private void btnSend_Click(object sender, EventArgs e)
         {
-            if(lbClients.SelectedIndex > 0)
+            if(lbClients.SelectedIndex >= 0)
             {
                 // TODO
             }
@@ -126,27 +126,25 @@ namespace IToolWebsocket
         #region Call Func
         private void Server_SessionClosed(AppSession session, SuperSocket.SocketBase.CloseReason value)
         {
-            if (clients.ContainsKey(session.SessionID))
+            if (clients.ContainsKey(session.RemoteEndPoint.ToString()))
             {
-                RemoveClient(session.SessionID);
+                RemoveClient(session.RemoteEndPoint.ToString());
             }
         }
 
         private void Server_NewSessionConnected(AppSession session)
         {
-            clients.Add(session.SessionID, session);
-            clientsHistory.Add(session.SessionID, new List<string>());
-            lbClients.Items.Add(session.SessionID);
-            AddHistoryTotal("客户端 " + session.SessionID + " 连接");
+            AddClient(session);
+            AddHistoryTotal("客户端 " + session.RemoteEndPoint.ToString() + " 连接");
         }
 
         private void Server_NewRequestReceived(AppSession session, SuperSocket.SocketBase.Protocol.StringRequestInfo requestInfo)
         {
-            if (clients.ContainsKey(session.SessionID))
+            if (clients.ContainsKey(session.RemoteEndPoint.ToString()))
             {
                 string content = requestInfo.Body;
-                clientsHistory[session.SessionID].Add(string.Format("{0}\r\n收到客户端 {1} 的消息： {2}", GetTimeTick(), session.SessionID, content));
-                AddHistoryTotal(string.Format("收到客户端 {0} 的消息： {1}", session.SessionID, content));
+                clientsHistory[session.RemoteEndPoint.ToString()].Add(string.Format("{0}\r\n收到客户端 {1} 的消息： {2}", GetTimeTick(), session.RemoteEndPoint.ToString(), content));
+                AddHistoryTotal(string.Format("收到客户端 {0} 的消息： {1}", session.RemoteEndPoint.ToString(), content));
             }
         }
 
@@ -154,31 +152,54 @@ namespace IToolWebsocket
 
         #region Pri Func
 
+        private void AddClient(AppSession session)
+        {
+            if (lbClients.InvokeRequired)
+            {
+                Action<AppSession> cb = new Action<AppSession>(AddClient);
+                lbClients.Invoke(cb, new object[] { session });
+            }
+            else
+            {
+                clients.Add(session.RemoteEndPoint.ToString(), session);
+                clientsHistory.Add(session.RemoteEndPoint.ToString(), new List<string>());
+                lbClients.Items.Add(session.RemoteEndPoint.ToString());
+            }
+        }
+
         /// <summary>
         /// 移除客户端
         /// </summary>
         /// <param name="sessionId"></param>
         private void RemoveClient(string sessionId)
         {
-            int index = -1;
-            foreach (var c in lbClients.Items)
+            if (lbClients.InvokeRequired)
             {
-                if (c.ToString().Equals(sessionId))
-                {
-                    index = lbClients.Items.IndexOf(c);
-                    break;
-                }
+                Action<string> cb = new Action<string>(RemoveClient);
+                lbClients.Invoke(cb, new object[] { sessionId });
             }
-            if (index >= 0)
+            else
             {
-                lbClients.Items.RemoveAt(index);
-                if (clients[sessionId] != null || clients[sessionId].Connected)
+                int index = -1;
+                foreach (var c in lbClients.Items)
                 {
-                    clients[sessionId].Close();
+                    if (c.ToString().Equals(sessionId))
+                    {
+                        index = lbClients.Items.IndexOf(c);
+                        break;
+                    }
                 }
-                clients.Remove(sessionId);
-                clientsHistory.Remove(sessionId);
-                AddHistoryTotal("关闭客户端：" + sessionId);
+                if (index >= 0)
+                {
+                    lbClients.Items.RemoveAt(index);
+                    if (clients[sessionId] != null || clients[sessionId].Connected)
+                    {
+                        clients[sessionId].Close();
+                    }
+                    clients.Remove(sessionId);
+                    clientsHistory.Remove(sessionId);
+                    AddHistoryTotal("关闭客户端：" + sessionId);
+                }
             }
         }
 
@@ -212,7 +233,15 @@ namespace IToolWebsocket
         /// <param name="history"></param>
         private void AddHistoryTotal(string history)
         {
-            tbHistory.AppendText(GetTimeTick() + "\r\n"+history + "\r\n\r\n");
+            if (tbHistory.InvokeRequired)
+            {
+                Action<string> cb = new Action<string>(AddHistoryTotal);
+                tbHistory.Invoke(cb, new object[] { history });
+            }
+            else
+            {
+                tbHistory.AppendText(GetTimeTick() + "\r\n" + history + "\r\n\r\n");
+            }
         }
 
         #endregion

@@ -126,7 +126,7 @@
             this.tbPort.Name = "tbPort";
             this.tbPort.Size = new System.Drawing.Size(159, 21);
             this.tbPort.TabIndex = 1;
-            this.tbPort.Text = "8000";
+            this.tbPort.Text = "8001";
             // 
             // label1
             // 

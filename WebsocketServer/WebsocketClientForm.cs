@@ -24,8 +24,6 @@ namespace IToolWebsocket
         private void WebsocketClientForm_Load(object sender, EventArgs e)
         {
             TransformConnect(true);
-
-            new WebsocketServerForm().Show();
         }
 
         #region 点击事件
@@ -50,7 +48,6 @@ namespace IToolWebsocket
                 client.Opened += Client_Opened;
                 client.Error += Client_Error;
                 client.DataReceived += Client_DataReceived;
-                client.EnableAutoSendPing = true;
                 client.ReceiveBufferSize = 2048;
                 client.Open();
                 AddHistory(string.Format("正在连接 ws://{0}:{1}...", ipStr, portStr));
@@ -77,7 +74,8 @@ namespace IToolWebsocket
 
         private void Client_Opened(object sender, EventArgs e)
         {
-            AddHistory(string.Format("连接成功！"));
+            client.Send("客户端准备发送数据");
+            AddHistory(string.Format("连接成功,准备发送数据！"));
             TransformConnect(false);
         }
 
@@ -91,6 +89,16 @@ namespace IToolWebsocket
 
         private void btnClose_Click(object sender, EventArgs e)
         {
+            if (client != null && client.State == WebSocketState.Open)
+            {
+                TransformConnect(false);
+                client.Close();
+                client = null;
+            }
+        }
+
+        private void btnSend_Click(object sender, EventArgs e)
+        {
             string content = tbSend.Text.Trim();
             if (!string.IsNullOrEmpty(content))
             {
@@ -100,20 +108,10 @@ namespace IToolWebsocket
                     client.Send(bs, 0, bs.Length);
                     AddHistory(string.Format("发送消息 {0}", content));
                 }
-                catch(Exception ee)
+                catch (Exception ee)
                 {
                     AddHistory(string.Format("发送失败，异常为 {0}", ee.Message));
                 }
-            }
-        }
-
-        private void btnSend_Click(object sender, EventArgs e)
-        {
-            if(client != null && client.State == WebSocketState.Open)
-            {
-                TransformConnect(false);
-                client.Close();
-                client = null;
             }
         }
         #endregion
@@ -135,7 +133,16 @@ namespace IToolWebsocket
         /// <param name="content"></param>
         private void AddHistory(string content)
         {
-            tbHistoryTotal.AppendText(GetTimeTick() + "\r\n" + content + "\r\n\r\n");
+            if (tbHistoryTotal.InvokeRequired)
+            {
+                Action<string> cb = new Action<string>(AddHistory);
+                tbHistoryTotal.Invoke(cb, new object[] { content });
+            }
+            else
+            {
+                tbHistoryTotal.AppendText(GetTimeTick() + "\r\n" + content + "\r\n\r\n");
+            }
+            
         }
 
         /// <summary>
@@ -144,12 +151,20 @@ namespace IToolWebsocket
         /// <param name="state"></param>
         private void TransformConnect(bool state)
         {
-            tbIP.Enabled = state;
-            tbPort.Enabled = state;
-            btnStart.Enabled = state;
-            btnClose.Enabled = !state;
-            tbSend.Enabled = !state;
-            btnSend.Enabled = !state;
+            if (this.InvokeRequired)
+            {
+                Action<bool> cb = new Action<bool>(TransformConnect);
+                this.Invoke(cb, new object[] { state });
+            }
+            else
+            {
+                tbIP.Enabled = state;
+                tbPort.Enabled = state;
+                btnStart.Enabled = state;
+                btnClose.Enabled = !state;
+                tbSend.Enabled = !state;
+                btnSend.Enabled = !state;
+            }
         }
 
         #endregion

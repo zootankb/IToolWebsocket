@@ -16,7 +16,7 @@ namespace IToolWebsocket
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new WebsocketClientForm());
+            Application.Run(new MainForm());
         }
     }
 }
